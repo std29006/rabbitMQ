@@ -1,8 +1,9 @@
-package std.ex05.topics;
+package ex05.topics;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import util.Conexao;
 
 public class EmitLogTopic {
 
@@ -12,8 +13,8 @@ public class EmitLogTopic {
         Connection connection = null;
         Channel channel = null;
         try {
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("localhost");
+            // Informações sobre a conexão com o sistema de filas
+            ConnectionFactory factory = Conexao.getConnectionFactory();
 
             connection = factory.newConnection();
             channel = connection.createChannel();

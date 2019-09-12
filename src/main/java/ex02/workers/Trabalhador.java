@@ -1,6 +1,7 @@
-package std.ex02.workers;
+package ex02.workers;
 
 import com.rabbitmq.client.*;
+import util.Conexao;
 
 import java.io.IOException;
 
@@ -9,8 +10,9 @@ public class Trabalhador {
     private static final String TASK_QUEUE_NAME = "task_queue";
 
     public static void main(String[] argv) throws Exception {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        // Informações sobre a conexão com o sistema de filas
+        ConnectionFactory factory = Conexao.getConnectionFactory();
+
         final Connection connection = factory.newConnection();
         final Channel channel = connection.createChannel();
 

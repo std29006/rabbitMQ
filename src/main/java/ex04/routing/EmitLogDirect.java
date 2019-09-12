@@ -1,8 +1,9 @@
-package std.ex04.routing;
+package ex04.routing;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import util.Conexao;
 
 public class EmitLogDirect {
 
@@ -10,8 +11,9 @@ public class EmitLogDirect {
 
     public static void main(String[] argv) throws Exception {
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        // Informações sobre a conexão com o sistema de filas
+        ConnectionFactory factory = Conexao.getConnectionFactory();
+
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 

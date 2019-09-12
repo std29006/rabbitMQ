@@ -1,30 +1,33 @@
-package std.ex04.routing;
+package ex05.topics;
 
 import com.rabbitmq.client.*;
+import util.Conexao;
 
 import java.io.IOException;
 
-public class ReceiveLogsDirect {
+public class ReceiveLogsTopic {
 
-    private static final String EXCHANGE_NAME = "direct_logs";
+    private static final String EXCHANGE_NAME = "topic_logs";
 
     public static void main(String[] argv) throws Exception {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        // Informações sobre a conexão com o sistema de filas
+        ConnectionFactory factory = Conexao.getConnectionFactory();
+
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        channel.exchangeDeclare(EXCHANGE_NAME, "direct");
+        channel.exchangeDeclare(EXCHANGE_NAME, "topic");
         String queueName = channel.queueDeclare().getQueue();
 
         if (argv.length < 1) {
-            System.err.println("Usage: ReceiveLogsDirect [info] [warning] [error]");
+            System.err.println("Usage: ReceiveLogsTopic [binding_key]...");
             System.exit(1);
         }
 
-        for (String severity : argv) {
-            channel.queueBind(queueName, EXCHANGE_NAME, severity);
+        for (String bindingKey : argv) {
+            channel.queueBind(queueName, EXCHANGE_NAME, bindingKey);
         }
+
         System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
         Consumer consumer = new DefaultConsumer(channel) {

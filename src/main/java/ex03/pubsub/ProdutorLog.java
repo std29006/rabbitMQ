@@ -1,16 +1,18 @@
-package std.ex03.pubsub;
+package ex03.pubsub;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import util.Conexao;
 
 public class ProdutorLog {
 
     private static final String EXCHANGE_NAME = "logs";
 
     public static void main(String[] argv) throws Exception {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        // Informações sobre a conexão com o sistema de filas
+        ConnectionFactory factory = Conexao.getConnectionFactory();
+
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 

@@ -1,4 +1,4 @@
-package std.ex06.rpc;
+package ex06.rpc;
 
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
@@ -7,6 +7,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Envelope;
+import util.Conexao;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -26,8 +27,8 @@ public class RPCServer {
     }
 
     public static void main(String[] argv) {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        // Informações sobre a conexão com o sistema de filas
+        ConnectionFactory factory = Conexao.getConnectionFactory();
 
         Connection connection = null;
         try {

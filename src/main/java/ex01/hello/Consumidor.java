@@ -1,4 +1,4 @@
-package std.ex01.hello;
+package ex01.hello;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -7,6 +7,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
+import util.Conexao;
+
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -17,8 +19,9 @@ public class Consumidor {
 
     public static void main(String[] argv) throws java.io.IOException, java.lang.InterruptedException, TimeoutException {
 
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        // Informações sobre a conexão com o sistema de filas
+        ConnectionFactory factory = Conexao.getConnectionFactory();
+
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
