@@ -1,0 +1,25 @@
+plugins {
+    // Gradle Shadow plugin
+    id 'com.github.johnrengelman.shadow' version '4.0.0'
+    id 'java'
+}
+
+group 'engtelecom'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
+    compile group: 'com.rabbitmq', name: 'amqp-client', version: '5.7.3'
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.28'
+
+}
