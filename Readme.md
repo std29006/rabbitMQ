@@ -1,9 +1,15 @@
 # Exemplos em Java com RabbitMQ
 
+> Esse projeto foi feito com gradle. Poderá executá-lo usando o gradle por meio de linha de comando ou dentro de uma IDE, como o IntelliJ.
+
+
+
 Nesse projeto estão exemplos do tutorial oficial do RabbitMQ
 
 - https://github.com/rabbitmq/rabbitmq-tutorials
 - http://www.rabbitmq.com/getstarted.html
+
+
 
 ## Exemplo 01 - Hello world!
 
@@ -47,38 +53,84 @@ Estilo pedido/resposta de uma chamada de procedimento remota.
 
 
 
-## Instruções para compilação
+## Instruções para compilação e geração do pacote `.jar`
 
-### Usando Netbeans
+### Usando o IntelliJ
 
-1. Abra o projeto no Netbeans e clique sobre "Clean & Build"
-2. Pacotes `.jar` resultantes da compilação estarão no subdiretório `target`
+1. Abra o projeto no IntelliJ
+2. Abra o painel do Gradle (clique no botão gradle que fica no painel lateral à direita)
+3. Abra o projeto `std`, abra o grupo `Tasks`-> `shadow`
+4. Clique duas vezes na tarefa `shadowJar`
+5. Será criado o pacote `std-1.0.jar` dentro do subdiretório `build/libs`.
 
 
 
-### Usando o maven no terminal
+### Usando o gradle no terminal
 
 1. Entre no diretório do projeto
-2. Digite: `mvn package`
-3. Pacotes `.jar` resultantes da compilação estarão no subdiretório `target`
+2. Digite: `gradle shadowJar`
+3. Será criado o pacote `std-1.0.jar` dentro do subdiretório `build/libs`
 
 
 
-## Instruções para execução dos exemplos
-
-> É necessário ter um servidor RabbitMQ em execução na máquina local e com usuário e senha padrão (guest/guest). Veja a [documentação oficial](http://www.rabbitmq.com/download.html) para instalar um servidor e colocá-lo em execução.
+## Instruções para execução dos exemplos na linha de comando
 
 
 
-Cada exemplo é composto por dois programas, geralmente, um produtor e um consumidor. Abaixo é apresentado como executar cada um dos programas do exemplo 01. Os demais exemplos seguem a mesma lógica de execução, porém com alguns pequenos ajustes. A explicação do funcionamento de cada exemplo pode ser obtida na [documentação oficial do RabbitMQ](http://www.rabbitmq.com/getstarted.html)
+> É necessário ter um servidor RabbitMQ em execução na máquina local e com usuário e senha padrão (guest/guest). Veja a [documentação oficial](http://www.rabbitmq.com/download.html) para instalar um servidor e colocá-lo em execução. Se tiver um cenário diferente desse, então altere as configurações da conexão no arquivo [conexao.properties](src/main/resources/conexao.properties).
+
+
+
+Cada exemplo é composto por dois programas, geralmente, um produtor e um consumidor. Abaixo é apresentado como executar cada um dos programas. A explicação do funcionamento de cada exemplo pode ser obtida na [documentação oficial do RabbitMQ](http://www.rabbitmq.com/getstarted.html)
 
 #### Exemplo 01
 
-1. Executando o produtor de mensagens
+1. Abra um terminal e execute o produtor
 
-   `java -jar rabbitMQExemplos-ex01-produtor.jar`
+   `java -cp std-1.0.jar ex01.hello.Produtor`
 
-2. Executando o consumidor de mensagens
+2. Abra um outro terminal e execute o consumidor
 
-   `java -jar rabbitMQExemplos-ex01-consumidor.jar`
+   `java -cp std-1.0.jar ex01.hello.Consumidor`
+
+#### Exemplo 02
+Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+
+```
+java -cp std-1.0.jar ex02.workers.Trabalhador
+
+java -cp std-1.0.jar ex02.workers.Tarefa
+```
+
+#### Exemplo 03
+Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+```
+java -cp std-1.0.jar ex03.pubsub.ReceptorLogs
+
+java -cp std-1.0.jar ex03.pubsub.ProdutorLog
+```
+
+#### Exemplo 04
+Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+```
+java -cp std-1.0.jar ex04.routing.ReceiveLogsDirect info
+
+java -cp std-1.0.jar ex04.routing.EmitLogDirect
+```
+
+#### Exemplo 05
+Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+```
+java -cp std-1.0.jar ex05.topics.ReceiveLogsTopic saudacao
+
+java -cp std-1.0.jar ex05.topics.EmitLogTopic saudacao
+```
+
+#### Exemplo 06
+Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+```
+java -cp std-1.0.jar ex06.rpc.RPCServer
+
+java -cp std-1.0.jar ex06.rpc.RPCClient
+```
 
