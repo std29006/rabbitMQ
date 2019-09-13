@@ -67,6 +67,16 @@ Estilo pedido/resposta de uma chamada de procedimento remota.
 
 ### Usando o gradle no terminal
 
+#### Instalando o gradle no Linux
+
+1. Instale o [SDKMAN](https://sdkman.io/) 
+   1. `curl -s "https://get.sdkman.io" | bash`
+   2. Por fim, feche o terminal e abra um novo terminal
+2. Instale o gradle
+   1. `sdk install gradle`
+
+#### Usando o gradle para gerar o pacote `.jar`
+
 1. Entre no diretório do projeto
 2. Digite: `gradle shadowJar`
 3. Será criado o pacote `std-1.0.jar` dentro do subdiretório `build/libs`
