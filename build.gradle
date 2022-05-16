@@ -1,11 +1,11 @@
 plugins {
     // Gradle Shadow plugin
-    id 'com.github.johnrengelman.shadow' version '4.0.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
 
 group 'engtelecom'
-version '1.0'
+version '1.0'   
 
 sourceCompatibility = 1.8
 
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
     // https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
     implementation 'com.rabbitmq:amqp-client:5.14.0'
