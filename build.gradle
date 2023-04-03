@@ -1,29 +1,121 @@
 plugins {
     // Gradle Shadow plugin
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'java'
+    id 'application'
 }
 
 group 'engtelecom'
 version '1.0'   
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    // Use JUnit Jupiter for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+application{
+	mainClass = 'util.App'
+}
 
+dependencies {
     // https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
-    implementation 'com.rabbitmq:amqp-client:5.14.0'
+    implementation 'com.rabbitmq:amqp-client:5.17.0'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-    testImplementation 'org.slf4j:slf4j-simple:1.7.32'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.7'
 
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:31.1-jre'
 }
+
+task ex01Consumidor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 01 - Hello world"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex01.hello.Consumidor"
+}
+
+task ex01Produtor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 01 - Hello world"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex01.hello.Produtor"
+}
+
+task ex02Tarefa(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 02 - Workers"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex02.workers.Tarefa"
+}
+
+task ex02Trabalhador(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 02 - Workers"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex02.workers.Trabalhador"
+}
+
+task ex03Produtor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 03 - Pub/Sub"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex03.pubsub.ProdutorLog"
+}
+
+task ex03Receptor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 03 - Pub/Sub"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex03.pubsub.ReceptorLogs"
+}
+
+task ex04Emissor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 04 - Routing"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex04.routing.EmitLogDirect"
+}
+
+task ex04Receptor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 04 - Routing"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex04.routing.ReceiveLogsDirect"
+}
+
+task ex05Emissor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 05 - Topics"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex05.topics.EmitLogTopic"
+}
+
+task ex05Receptor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 05 - Topics"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex05.topics.ReceiveLogsTopic"
+}
+
+task ex06Servidor(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 06 - RPC"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex06.rpc.RPCServer"
+}
+
+task ex06Cliente(type: JavaExec) {
+    group = "Execution"
+    description = "Exemplo 06 - RPC"
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "ex06.rpc.RPCClient"
+}
+
 
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
