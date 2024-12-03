@@ -1,17 +1,18 @@
 # Exemplos em Java com RabbitMQ
 
-> Esse projeto foi feito com gradle. Poderá executá-lo usando o gradle por meio de linha de comando ou dentro de uma IDE, como o IntelliJ ou VSCode.
+Nesse projeto estão exemplos do tutorial oficial do RabbitMQ. Cada exemplo é um programa Java que utiliza a biblioteca [RabbitMQ Java Client](https://www.rabbitmq.com/java-client.html) para se comunicar com o servidor RabbitMQ.
 
-Nesse projeto estão exemplos do tutorial oficial do RabbitMQ
+O servidor RabbitMQ é um *broker* de mensagens que implementa o protocolo AMQP (*Advanced Message Queuing Protocol*). Ele é responsável por receber, armazenar e entregar mensagens para os consumidores. Subiremos um servidor RabbitMQ em um contêiner Docker para testar os exemplos. 
 
-- https://github.com/rabbitmq/rabbitmq-tutorials
-- http://www.rabbitmq.com/getstarted.html
-
-É necessário ter um servidor RabbitMQ em execução na máquina local e com usuário e senha padrão (guest/guest). No arquivo [conexao.properties](src/main/resources/conexao.properties) estão contidas as informações sobre o `host`, `username` e `password` do servidor RabbitMQ. Veja a [documentação oficial](http://www.rabbitmq.com/download.html) para instalar um servidor e colocá-lo em execução. Ou execute o servidor RabbitMQ dentro de um contêiner Docker usando as instruções apresentadas abaixo:
+É necessário ter um servidor RabbitMQ em execução na máquina local e com usuário e senha padrão (guest/guest). No arquivo [conexao.properties](src/main/resources/conexao.properties) estão contidas as informações sobre o `host`, `username` e `password` do servidor RabbitMQ. Execute o comando abaixo para subir o servidor RabbitMQ:
 
 ```bash
 docker run --name servidor-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management-alpine
 ```
+
+Se abrir no navegador o endereço `http://localhost:15672` você verá a interface web do RabbitMQ. Ali você pode ver as filas, trocas, conexões, etc. O usuário e senha padrão são `guest/guest`.
+
+
 Cada exemplo é composto por dois programas, geralmente, um produtor e um consumidor. Abaixo é apresentado como executar cada um dos programas. A explicação do funcionamento de cada exemplo pode ser obtida na [documentação oficial do RabbitMQ](http://www.rabbitmq.com/getstarted.html)
 
 
@@ -31,7 +32,7 @@ Para executar cada exemplo com o JAR é necessário fazer algo como:
 java -cp build/libs/std-1.0-all.jar ex01.hello.Consumidor
 ```
 
-Abaixo são apresentados os exemplos, bem como as instruções de execução por meio das tarefas gradle.
+Porém, neste projeto também foram criadas tarefas gradle para facilitar a execução de cada exemplo. Abaixo são apresentados os exemplos, bem como as instruções de execução por meio das tarefas gradle.
 
 ## Exemplo 01 - Hello world!
 
@@ -42,9 +43,9 @@ Um simples hello world.
 Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
 
 ```bash
-./gradlew -q ex01Produtor
-
 ./gradlew -q ex01Consumidor
+
+./gradlew -q ex01Produtor
 ```
 
 ## Exemplo 02 - Work queues
@@ -116,3 +117,8 @@ Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequênc
 
 ./gradlew -q ex06Cliente
 ```
+
+## Referências 
+
+- https://github.com/rabbitmq/rabbitmq-tutorials
+- http://www.rabbitmq.com/getstarted.html
