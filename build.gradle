@@ -18,12 +18,12 @@ application{
 
 dependencies {
     // https://mvnrepository.com/artifact/com.rabbitmq/amqp-client
-    implementation 'com.rabbitmq:amqp-client:5.17.0'
+    implementation 'com.rabbitmq:amqp-client:5.23.0'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
-    implementation 'org.slf4j:slf4j-simple:2.0.7'
+    implementation 'org.slf4j:slf4j-simple:2.0.16'
 
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
@@ -32,88 +32,100 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
 }
 
-task ex01Consumidor(type: JavaExec) {
+tasks.register('ex01Consumidor', JavaExec) {
     group = "Execution"
     description = "Exemplo 01 - Hello world"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex01.hello.Consumidor"
+    standardInput = System.in
 }
 
-task ex01Produtor(type: JavaExec) {
+tasks.register('ex01Produtor', JavaExec) {
     group = "Execution"
     description = "Exemplo 01 - Hello world"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex01.hello.Produtor"
+    standardInput = System.in
 }
 
-task ex02Tarefa(type: JavaExec) {
+tasks.register('ex02Tarefa', JavaExec) {
     group = "Execution"
     description = "Exemplo 02 - Workers"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex02.workers.Tarefa"
+    standardInput = System.in
 }
 
-task ex02Trabalhador(type: JavaExec) {
+tasks.register('ex02Trabalhador', JavaExec) {
     group = "Execution"
     description = "Exemplo 02 - Workers"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex02.workers.Trabalhador"
+    standardInput = System.in
 }
 
-task ex03Produtor(type: JavaExec) {
+tasks.register('ex03Produtor', JavaExec) {
     group = "Execution"
     description = "Exemplo 03 - Pub/Sub"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex03.pubsub.ProdutorLog"
+    standardInput = System.in
 }
 
-task ex03Receptor(type: JavaExec) {
+tasks.register('ex03Receptor', JavaExec) {
     group = "Execution"
     description = "Exemplo 03 - Pub/Sub"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex03.pubsub.ReceptorLogs"
+    standardInput = System.in
 }
 
-task ex04Emissor(type: JavaExec) {
+tasks.register('ex04Emissor', JavaExec) {
     group = "Execution"
     description = "Exemplo 04 - Routing"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex04.routing.EmitLogDirect"
+    standardInput = System.in
 }
 
-task ex04Receptor(type: JavaExec) {
+tasks.register('ex04Receptor', JavaExec) {
     group = "Execution"
     description = "Exemplo 04 - Routing"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex04.routing.ReceiveLogsDirect"
+    standardInput = System.in
 }
 
-task ex05Emissor(type: JavaExec) {
+tasks.register('ex05Emissor', JavaExec) {
     group = "Execution"
     description = "Exemplo 05 - Topics"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex05.topics.EmitLogTopic"
+    standardInput = System.in
 }
 
-task ex05Receptor(type: JavaExec) {
+tasks.register('ex05Receptor', JavaExec) {
     group = "Execution"
     description = "Exemplo 05 - Topics"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex05.topics.ReceiveLogsTopic"
+    standardInput = System.in
 }
 
-task ex06Servidor(type: JavaExec) {
+tasks.register('ex06Servidor', JavaExec) {
     group = "Execution"
     description = "Exemplo 06 - RPC"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex06.rpc.RPCServer"
+    standardInput = System.in
 }
 
-task ex06Cliente(type: JavaExec) {
+tasks.register('ex06Cliente', JavaExec) {
     group = "Execution"
     description = "Exemplo 06 - RPC"
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "ex06.rpc.RPCClient"
+    standardInput = System.in
 }
 
 
