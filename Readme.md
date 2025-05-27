@@ -1,122 +1,148 @@
 # Exemplos em Java com RabbitMQ
 
-Nesse projeto estão exemplos do tutorial oficial do RabbitMQ. Cada exemplo é um programa Java que utiliza a biblioteca [RabbitMQ Java Client](https://www.rabbitmq.com/java-client.html) para se comunicar com o servidor RabbitMQ.
+O servidor RabbitMQ é um *broker* de mensagens que implementa o protocolo AMQP (*Advanced Message Queuing Protocol*). O RabbitMQ é um sistema de mensagens que permite a comunicação entre diferentes aplicações, facilitando a troca de informações de forma assíncrona e escalável.
 
-O servidor RabbitMQ é um *broker* de mensagens que implementa o protocolo AMQP (*Advanced Message Queuing Protocol*). Ele é responsável por receber, armazenar e entregar mensagens para os consumidores. Subiremos um servidor RabbitMQ em um contêiner Docker para testar os exemplos. 
+Neste repositório são apresentados exemplos do tutorial oficial do RabbitMQ. Cada exemplo é um programa Java que utiliza a biblioteca [RabbitMQ Java Client](https://www.rabbitmq.com/java-client.html) para se comunicar com o servidor RabbitMQ.
 
-É necessário ter um servidor RabbitMQ em execução na máquina local e com usuário e senha padrão (guest/guest). No arquivo [conexao.properties](src/main/resources/conexao.properties) estão contidas as informações sobre o `host`, `username` e `password` do servidor RabbitMQ. Execute o comando abaixo para subir o servidor RabbitMQ:
+
+## Servidor RabbitMQ
+
+Para executar os exemplos, é necessário ter um servidor RabbitMQ em execução. Neste projeto, utilizamos o RabbitMQ na versão `3-management-alpine`, que é uma imagem leve do RabbitMQ com a interface de gerenciamento habilitada.
+
+Para facilitar o processo de instalação e configuração do RabbitMQ, utilizamos o Docker. Assim, não é necessário instalar o RabbitMQ diretamente na máquina, mas sim executar um contêiner Docker com o RabbitMQ já configurado.
 
 ```bash
 docker run --name servidor-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management-alpine
 ```
 
-Se abrir no navegador o endereço `http://localhost:15672` você verá a interface web do RabbitMQ. Ali você pode ver as filas, trocas, conexões, etc. O usuário e senha padrão são `guest/guest`.
+Após executar o comando acima, o servidor RabbitMQ estará rodando em segundo plano. Você pode acessar a interface de gerenciamento do RabbitMQ através do navegador, utilizando o endereço `http://localhost:15672`.
+
+Na interface de gerenciamento, você poderá visualizar as filas, trocas, conexões e outras informações sobre o servidor RabbitMQ. O usuário e senha padrão são `guest/guest`, que são os valores padrão do RabbitMQ.
 
 
-Cada exemplo é composto por dois programas, geralmente, um produtor e um consumidor. Abaixo é apresentado como executar cada um dos programas. A explicação do funcionamento de cada exemplo pode ser obtida na [documentação oficial do RabbitMQ](http://www.rabbitmq.com/getstarted.html)
+## Instruções para execução dos exemplos
+
+Cada exemplo é composto por dois programas, geralmente, um produtor e um consumidor. No arquivo [build.gradle](build.gradle) foram criadas [tarefas gradle](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html) para facilitar a execução de cada exemplo. Para cada exemplo foram criadas 2 tarefas e todas estestão dentro do grupo `execution` do gradle. 
+
+No arquivo [conexao.properties](src/main/resources/conexao.properties) estão contidas as informações sobre o `host`, `username` e `password` do servidor RabbitMQ que será utilizado nos exemplos em Java. Por padrão, o usuário e senha são `guest/guest`, que são os valores padrão do RabbitMQ.
 
 
-## Instruções para compilação
+A explicação do funcionamento de cada exemplo pode ser obtida na [documentação oficial do RabbitMQ](http://www.rabbitmq.com/getstarted.html)
 
-No arquivo [build.gradle](build.gradle) foram criadas [tarefas gradle](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html) para facilitar a execução de cada exemplo. Para cada exemplo foram criadas 2 tarefas e todas estestão dentro do grupo `execution` do gradle. 
-
-Também é possível gerar um JAR contendo todos os exemplos, bem como as dependências. Para isso execute os passos abaixo:
-
-1. Entre no diretório do projeto
-2. Digite: `./gradlew shadowJar`
-3. Será criado o pacote `std-1.0-all.jar` dentro do subdiretório `build/libs`
-
-Para executar cada exemplo com o JAR é necessário fazer algo como:
-
-```bash
-java -cp build/libs/std-1.0-all.jar ex01.hello.Consumidor
-```
-
-Porém, neste projeto também foram criadas tarefas gradle para facilitar a execução de cada exemplo. Abaixo são apresentados os exemplos, bem como as instruções de execução por meio das tarefas gradle.
-
-## Exemplo 01 - Hello world!
-
-Um simples hello world.
+### Exemplo 01 - Hello world!
 
 ![hello world](images/one.png)
 
-Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+Neste exemplo, um produtor envia uma mensagem para uma fila e um consumidor recebe essa mensagem. Se você executar o exemplo várias vezes, verá que o consumidor receberá todas as mensagens enviadas pelo produtor, mesmo que o consumidor não esteja em execução no momento em que as mensagens são enviadas.
 
 ```bash
+# Primeiro, execute o consumidor para que ele esteja pronto para receber mensagens.
 ./gradlew -q ex01Consumidor
+```
 
+```bash
+# Em seguida, execute o produtor para enviar uma mensagem.
 ./gradlew -q ex01Produtor
 ```
 
-## Exemplo 02 - Work queues
-
-Distribuindo tarefas por todos os processos trabalhadores (de forma igualitária - *round robin*).
+### Exemplo 02 - Work queues
 
 ![work queues](images/two.png)
 
-Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+Neste exemplo, um produtor envia mensagens para uma fila e vários consumidores (trabalhadores) recebem essas mensagens. O objetivo é distribuir as tarefas entre os trabalhadores de forma equilibrada, utilizando o padrão varreduda cíclica (*round robin*).
+
 
 ```bash
+# Abra três terminais e execute o trabalhador em cada um deles com o comando abaixo.
 ./gradlew -q ex02Trabalhador
+```
 
+```bash
+# Em seguida, abra um novo terminal e execute o produtor para enviar mensagens.
 ./gradlew -q ex02Tarefa
 ```
 
-## Exemplo 03 - Publish / Subscribe
-
-Enviando mensagens para diversos consumidores.
+### Exemplo 03 - Publish / Subscribe
 
 ![publish/subscribe](images/three.png)
 
-Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+Neste exemplo, um produtor envia mensagens para uma *exchange* e vários consumidores recebem essas mensagens. O objetivo é demonstrar o padrão de publicação/assinatura (*publish/subscribe*), onde as mensagens são enviadas para todos os consumidores conectados à *exchange*.
 
 ```bash
+# Abra dois terminais e execute o receptor em cada um deles com o comando abaixo.
 ./gradlew -q ex03Receptor
+```
 
+```bash
+# Em seguida, abra um novo terminal e execute o produtor para enviar mensagens.
 ./gradlew -q ex03Produtor
 ```
 
-## Exemplo 04 - Routing
-
-Recebendo mensagens de forma seletiva, escolhendo de qual fila receberá mensagens.
+### Exemplo 04 - Routing
 
 ![routing](images/four.png)
 
-Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+Neste exemplo, um produtor envia mensagens para uma *exchange* com base em uma chave de roteamento. Vários consumidores recebem essas mensagens, mas cada consumidor está interessado apenas em mensagens com uma chave de roteamento específica. O objetivo é demonstrar o padrão de roteamento, onde as mensagens são enviadas para filas específicas com base na chave de roteamento.
 
 ```bash
+# Abra dois terminais e execute o receptor em cada um deles com o comando abaixo.
 ./gradlew -q ex04Receptor --args "info"
-
-./gradlew -q ex04Emissor
+```
+```bash
+# Abra um novo terminal e execute o receptor com uma chave de roteamento diferente.
+./gradlew -q ex04Receptor --args "std"
 ```
 
-## Exemplo 05 - Topics
+```bash
+# Em seguida, abra um novo terminal e execute o emissor para enviar mensagens.
+# Emissor envia mensagens com diferentes chaves de roteamento. Use "info" ou "std" como argumento.
+./gradlew -q ex04Emissor --args "info"
+```
 
-Recebendo mensagens com base em padrões de texto (tópicos).
+### Exemplo 05 - Topics
 
 ![topics](images/five.png)
 
-Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+Neste exemplo, um produtor envia mensagens para uma *exchange* com base em padrões de texto (tópicos). Vários consumidores recebem essas mensagens, mas cada consumidor está interessado apenas em mensagens que correspondam a um padrão específico. O objetivo é demonstrar o padrão de tópicos, onde as mensagens são enviadas para filas específicas com base em padrões de texto.
 
 ```bash
-./gradlew -q ex05Receptor --args "saudacao"
-
-./gradlew -q ex05Emissor --args "saudacao"
+# Abra um terminal e execute o receptor com um padrão específico.
+./gradlew -q ex05Receptor --args "std.aula"
+```
+```bash
+# Abra um terminal e execute o receptor com um padrão específico.
+./gradlew -q ex05Receptor --args "std.prova"
 ```
 
-## Exemplo 06 - RPC
+```bash
+# Abra um novo terminal e execute o receptor com um padrão mais amplo.
+./gradlew -q ex05Receptor --args "std.*"
+```
 
-Estilo pedido/resposta de uma chamada de procedimento remota.
+```bash
+# Em seguida, abra um novo terminal e execute o emissor para enviar mensagens.
+./gradlew -q ex05Emissor --args "std.aula"
+```
+
+
+### Exemplo 06 - RPC
 
 ![rpc](images/six.png)
 
-Execute cada uma das linhas abaixo em um terminal diferente e siga essa sequência de execução.
+Neste exemplo, um cliente envia uma solicitação para um servidor e aguarda uma resposta. O objetivo é demonstrar o padrão de chamada de procedimento remoto (*RPC*), onde o cliente faz uma solicitação ao servidor e recebe uma resposta.
 
 ```bash
+# Primeiro, execute o servidor para que ele esteja pronto para receber solicitações.
 ./gradlew -q ex06Servidor
+```
 
+```bash
+# Em seguida, execute o cliente para enviar uma solicitação e receber uma resposta.
 ./gradlew -q ex06Cliente
 ```
+
+Faça o contrário, suba o cliente primeiro e depois o servidor, para ver como o cliente aguarda a resposta do servidor.
+
 
 ## Referências 
 
