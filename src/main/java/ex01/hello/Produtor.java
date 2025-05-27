@@ -15,20 +15,19 @@ public class Produtor {
         // Informações sobre a conexão com o sistema de filas
         ConnectionFactory factory = Conexao.getConnectionFactory();
 
-        try (Connection connection = factory.newConnection()) {
-            Channel channel = connection.createChannel();
+        try (Connection connection = factory.newConnection();
+            Channel channel = connection.createChannel()) {
             
             // Enviando mensagem
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             String message = "Hello World!";
+
+            // Publicando mensagem na fila
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-            System.out.println(" [x] Sent '" + message + "'");
-            
-            
-            // Fechando canal e conexão
-            channel.close();
+            System.out.println(" [x] Sent '" + message + "'");    
+        
         }catch (Exception e){
-            System.err.println("Não foi poss;ível criar conexão\n");
+            System.err.println("Não foi possível criar conexão\n");
         }
     }
 
