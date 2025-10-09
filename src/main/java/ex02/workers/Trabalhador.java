@@ -3,13 +3,11 @@ package ex02.workers;
 import com.rabbitmq.client.*;
 import util.Conexao;
 
-import java.io.IOException;
-
 public class Trabalhador {
 
     private static final String TASK_QUEUE_NAME = "task_queue";
 
-    public static void main(String[] argv) throws Exception {
+    public static void main(String[] args) throws Exception {
         // Informações sobre a conexão com o sistema de filas
         ConnectionFactory factory = Conexao.getConnectionFactory();
 
@@ -21,28 +19,31 @@ public class Trabalhador {
 
         channel.basicQos(1);
 
-        final Consumer consumer = new DefaultConsumer(channel) {
-            @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                String message = new String(body, "UTF-8");
-
-                System.out.println(" [x] Received '" + message + "'");
-                try {
-                    doWork(message);
-                } finally {
-                    System.out.println(" [x] Done");
-                    channel.basicAck(envelope.getDeliveryTag(), false);
-                }
+        // Cria um consumidor usando lambda para processar as mensagens recebidas
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            // Processa a mensagem recebida
+            String message = new String(delivery.getBody(), "UTF-8");
+            System.out.println(" [x] Received '" + message + "'");
+            try {
+                doWork(message); // Simula trabalho
+            } finally {
+                System.out.println(" [x] Done");
+                // Confirma o processamento da mensagem
+                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             }
         };
-        channel.basicConsume(TASK_QUEUE_NAME, false, consumer);
+        channel.basicConsume(TASK_QUEUE_NAME, false, deliverCallback, consumerTag -> {
+        });
     }
 
     private static void doWork(String task) {
+        int seconds = 1;
         for (char ch : task.toCharArray()) {
             if (ch == '.') {
                 try {
                     Thread.sleep(1000);
+                    System.out.println(" working...done " + seconds + "s");
+                    seconds++;
                 } catch (InterruptedException _ignored) {
                     Thread.currentThread().interrupt();
                 }

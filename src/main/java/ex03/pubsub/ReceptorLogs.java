@@ -30,6 +30,7 @@ public class ReceptorLogs {
                 System.out.println(" [x] Received '" + message + "'");
             }
         };
+
         channel.basicConsume(queueName, true, consumer);
     }
 }

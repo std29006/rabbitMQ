@@ -16,17 +16,17 @@ public class Produtor {
         ConnectionFactory factory = Conexao.getConnectionFactory();
 
         try (Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel()) {
-            
+                Channel channel = connection.createChannel()) {
+
             // Enviando mensagem
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             String message = "Hello World!";
 
             // Publicando mensagem na fila
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-            System.out.println(" [x] Sent '" + message + "'");    
-        
-        }catch (Exception e){
+            System.out.println(" [x] Sent '" + message + "'");
+
+        } catch (Exception e) {
             System.err.println("Não foi possível criar conexão\n");
         }
     }

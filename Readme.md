@@ -12,12 +12,12 @@ Para executar os exemplos, é necessário ter um servidor RabbitMQ em execução
 Para facilitar o processo de instalação e configuração do RabbitMQ, utilizamos o Docker. Assim, não é necessário instalar o RabbitMQ diretamente na máquina, mas sim executar um contêiner Docker com o RabbitMQ já configurado.
 
 ```bash
-docker run --name servidor-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management-alpine
+docker run --rm -p 15672:15672 -p 5672:5672 rabbitmq:3-management-alpine
 ```
-
-Após executar o comando acima, o servidor RabbitMQ estará rodando em segundo plano. Você pode acessar a interface de gerenciamento do RabbitMQ através do navegador, utilizando o endereço `http://localhost:15672`.
-
-Na interface de gerenciamento, você poderá visualizar as filas, trocas, conexões e outras informações sobre o servidor RabbitMQ. O usuário e senha padrão são `guest/guest`, que são os valores padrão do RabbitMQ.
+>[!note]
+> Após executar o comando acima, o servidor RabbitMQ estará em execução e pronto para aceitar conexões na porta `5672` (porta padrão do AMQP) e a interface de gerenciamento estará disponível na porta `15672` (porta padrão da interface de gerenciamento do RabbitMQ). 
+>
+> Acesse a interface de gerenciamento em [http://localhost:15672](http://localhost:15672), com o usuário e senha padrão `guest/guest`. Na interface, você poderá monitorar e gerenciar o servidor RabbitMQ, incluindo filas, trocas, conexões e muito mais.
 
 
 ## Instruções para execução dos exemplos
@@ -35,32 +35,30 @@ A explicação do funcionamento de cada exemplo pode ser obtida na [documentaç�
 
 Neste exemplo, um produtor envia uma mensagem para uma fila e um consumidor recebe essa mensagem. Se você executar o exemplo várias vezes, verá que o consumidor receberá todas as mensagens enviadas pelo produtor, mesmo que o consumidor não esteja em execução no momento em que as mensagens são enviadas.
 
-```bash
-# Primeiro, execute o consumidor para que ele esteja pronto para receber mensagens.
-./gradlew -q ex01Consumidor
-```
 
-```bash
-# Em seguida, execute o produtor para enviar uma mensagem.
-./gradlew -q ex01Produtor
-```
+- Execute o consumidor para que ele esteja pronto para receber mensagens.
+    ```bash
+    ./gradlew -q ex01Consumidor
+    ```
+- Execute o produtor para enviar uma mensagem.
+    ```bash
+    ./gradlew -q ex01Produtor
+    ```
 
 ### Exemplo 02 - Work queues
 
 ![work queues](images/two.png)
 
-Neste exemplo, um produtor envia mensagens para uma fila e vários consumidores (trabalhadores) recebem essas mensagens. O objetivo é distribuir as tarefas entre os trabalhadores de forma equilibrada, utilizando o padrão varreduda cíclica (*round robin*).
+Neste exemplo, um produtor envia mensagens para uma fila e vários consumidores (trabalhadores) recebem essas mensagens. O objetivo é distribuir as tarefas entre os trabalhadores de forma equilibrada, utilizando o padrão varredura cíclica (*round robin*).
 
-
-```bash
-# Abra três terminais e execute o trabalhador em cada um deles com o comando abaixo.
-./gradlew -q ex02Trabalhador
-```
-
-```bash
-# Em seguida, abra um novo terminal e execute o produtor para enviar mensagens.
-./gradlew -q ex02Tarefa
-```
+- Execute o trabalhador em três terminais diferentes.
+    ```bash
+    ./gradlew -q ex02Trabalhador
+    ```
+- Execute o produtor para enviar mensagens. Cada ponto na mensagem representa 1 segundo de trabalho para o trabalhador.
+    ```bash
+    ./gradlew -q ex02Tarefa --args ". . ."
+    ```
 
 ### Exemplo 03 - Publish / Subscribe
 
@@ -68,15 +66,14 @@ Neste exemplo, um produtor envia mensagens para uma fila e vários consumidores 
 
 Neste exemplo, um produtor envia mensagens para uma *exchange* e vários consumidores recebem essas mensagens. O objetivo é demonstrar o padrão de publicação/assinatura (*publish/subscribe*), onde as mensagens são enviadas para todos os consumidores conectados à *exchange*.
 
-```bash
-# Abra dois terminais e execute o receptor em cada um deles com o comando abaixo.
-./gradlew -q ex03Receptor
-```
-
-```bash
-# Em seguida, abra um novo terminal e execute o produtor para enviar mensagens.
-./gradlew -q ex03Produtor
-```
+- Execute o receptor em dois terminais diferentes.
+    ```bash
+    ./gradlew -q ex03Receptor
+    ```
+- Execute o produtor para enviar mensagens.
+    ```bash
+    ./gradlew -q ex03Produtor --args "sistemas distribuídos"
+    ```
 
 ### Exemplo 04 - Routing
 
@@ -84,20 +81,18 @@ Neste exemplo, um produtor envia mensagens para uma *exchange* e vários consumi
 
 Neste exemplo, um produtor envia mensagens para uma *exchange* com base em uma chave de roteamento. Vários consumidores recebem essas mensagens, mas cada consumidor está interessado apenas em mensagens com uma chave de roteamento específica. O objetivo é demonstrar o padrão de roteamento, onde as mensagens são enviadas para filas específicas com base na chave de roteamento.
 
-```bash
-# Abra dois terminais e execute o receptor em cada um deles com o comando abaixo.
-./gradlew -q ex04Receptor --args "info"
-```
-```bash
-# Abra um novo terminal e execute o receptor com uma chave de roteamento diferente.
-./gradlew -q ex04Receptor --args "std"
-```
-
-```bash
-# Em seguida, abra um novo terminal e execute o emissor para enviar mensagens.
-# Emissor envia mensagens com diferentes chaves de roteamento. Use "info" ou "std" como argumento.
-./gradlew -q ex04Emissor --args "info"
-```
+- Execute o receptor em dois terminais diferentes com a chave de roteamento "info".
+    ```bash
+    ./gradlew -q ex04Receptor --args "info"
+    ```
+- Execute o receptor em um novo terminal com uma chave de roteamento "std".
+    ```bash
+    ./gradlew -q ex04Receptor --args "std"
+    ```
+- Em seguida, abra um novo terminal e execute o emissor para enviar mensagens. Use "info" ou "std" como argumento.
+    ```bash
+    ./gradlew -q ex04Emissor --args "info"
+    ```
 
 ### Exemplo 05 - Topics
 
@@ -105,24 +100,21 @@ Neste exemplo, um produtor envia mensagens para uma *exchange* com base em uma c
 
 Neste exemplo, um produtor envia mensagens para uma *exchange* com base em padrões de texto (tópicos). Vários consumidores recebem essas mensagens, mas cada consumidor está interessado apenas em mensagens que correspondam a um padrão específico. O objetivo é demonstrar o padrão de tópicos, onde as mensagens são enviadas para filas específicas com base em padrões de texto.
 
-```bash
-# Abra um terminal e execute o receptor com um padrão específico.
-./gradlew -q ex05Receptor --args "std.aula"
-```
-```bash
-# Abra um terminal e execute o receptor com um padrão específico.
-./gradlew -q ex05Receptor --args "std.prova"
-```
-
-```bash
-# Abra um novo terminal e execute o receptor com um padrão mais amplo.
-./gradlew -q ex05Receptor --args "std.*"
-```
-
-```bash
-# Em seguida, abra um novo terminal e execute o emissor para enviar mensagens.
-./gradlew -q ex05Emissor --args "std.aula"
-```
+- Execute o receptor em dois terminais diferentes com padrões específicos.
+    ```bash
+    ./gradlew -q ex05Receptor --args "std.aula"
+    ```
+    ```bash
+    ./gradlew -q ex05Receptor --args "std.prova"
+    ```
+- Execute o receptor em um novo terminal com um padrão mais amplo.
+    ```bash
+    ./gradlew -q ex05Receptor --args "std.*"
+    ```
+- Execute o emissor para enviar mensagens com o padrão "std.aula".
+    ```bash
+    ./gradlew -q ex05Emissor --args "std.aula"
+    ```
 
 
 ### Exemplo 06 - RPC
@@ -131,17 +123,16 @@ Neste exemplo, um produtor envia mensagens para uma *exchange* com base em padr�
 
 Neste exemplo, um cliente envia uma solicitação para um servidor e aguarda uma resposta. O objetivo é demonstrar o padrão de chamada de procedimento remoto (*RPC*), onde o cliente faz uma solicitação ao servidor e recebe uma resposta.
 
-```bash
-# Primeiro, execute o servidor para que ele esteja pronto para receber solicitações.
-./gradlew -q ex06Servidor
-```
+- Execute o servidor para que ele esteja pronto para receber solicitações.
+    ```bash
+    ./gradlew -q ex06Servidor
+    ```
+- Em seguida, execute o cliente para enviar uma solicitação e receber uma resposta.
+    ```bash
+    ./gradlew -q ex06Cliente
+    ```
 
-```bash
-# Em seguida, execute o cliente para enviar uma solicitação e receber uma resposta.
-./gradlew -q ex06Cliente
-```
-
-Faça o contrário, suba o cliente primeiro e depois o servidor, para ver como o cliente aguarda a resposta do servidor.
+Agora, faça o contrário, suba o cliente primeiro e depois o servidor, para ver como o cliente aguarda a resposta do servidor.
 
 
 ## Referências 

@@ -43,7 +43,8 @@ public class RPCServer {
 
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
-                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+                        byte[] body) throws IOException {
                     AMQP.BasicProperties replyProps = new AMQP.BasicProperties.Builder()
                             .correlationId(properties.getCorrelationId())
                             .build();
@@ -68,7 +69,7 @@ public class RPCServer {
 
             channel.basicConsume(RPC_QUEUE_NAME, false, consumer);
 
-            //loop to prevent reaching finally block
+            // loop to prevent reaching finally block
             while (true) {
                 try {
                     Thread.sleep(100);

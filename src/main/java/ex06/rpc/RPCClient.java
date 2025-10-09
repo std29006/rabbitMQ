@@ -25,7 +25,6 @@ public class RPCClient {
         // Informações sobre a conexão com o sistema de filas
         ConnectionFactory factory = Conexao.getConnectionFactory();
 
-
         connection = factory.newConnection();
         channel = connection.createChannel();
 
@@ -46,7 +45,8 @@ public class RPCClient {
 
         channel.basicConsume(replyQueueName, true, new DefaultConsumer(channel) {
             @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties,
+                    byte[] body) throws IOException {
                 if (properties.getCorrelationId().equals(corrId)) {
                     response.offer(new String(body, "UTF-8"));
                 }

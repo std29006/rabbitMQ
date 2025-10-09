@@ -9,7 +9,7 @@ public class EmitLogDirect {
 
     private static final String EXCHANGE_NAME = "direct_logs";
 
-    public static void main(String[] argv) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         // Informações sobre a conexão com o sistema de filas
         ConnectionFactory factory = Conexao.getConnectionFactory();
@@ -17,10 +17,13 @@ public class EmitLogDirect {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
+        // Declara uma exchange do tipo 'direct'
+        // Mensagens são roteadas com base na chave de roteamento (severity)
+        // Possíveis valores de severity: "info", "warning", "error"
         channel.exchangeDeclare(EXCHANGE_NAME, "direct");
 
-        String severity = getSeverity(argv);
-        String message = getMessage(argv);
+        String severity = getSeverity(args);
+        String message = getMessage(args);
 
         channel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes("UTF-8"));
         System.out.println(" [x] Sent '" + severity + "':'" + message + "'");
@@ -36,25 +39,8 @@ public class EmitLogDirect {
         return strings[0];
     }
 
+    // Obtém a mensagem a ser enviada
     private static String getMessage(String[] strings) {
-        if (strings.length < 2) {
-            return "Hello World!";
-        }
-        return joinStrings(strings, " ", 1);
-    }
-
-    private static String joinStrings(String[] strings, String delimiter, int startIndex) {
-        int length = strings.length;
-        if (length == 0) {
-            return "";
-        }
-        if (length < startIndex) {
-            return "";
-        }
-        StringBuilder words = new StringBuilder(strings[startIndex]);
-        for (int i = startIndex + 1; i < length; i++) {
-            words.append(delimiter).append(strings[i]);
-        }
-        return words.toString();
+        return strings.length < 1 ? "Hello World!" : String.join(" ", strings);
     }
 }
