@@ -24,6 +24,7 @@ public abstract class Conexao {
             factory.setHost("localhost");
         } else {
             factory.setHost(properties.getProperty("host"));
+            factory.setPort(Integer.parseInt(properties.getProperty("port", "5672")));
             factory.setUsername(properties.getProperty("username"));
             factory.setPassword(properties.getProperty("password"));
             factory.setVirtualHost(properties.getProperty("virtualhost"));
